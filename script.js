@@ -96,6 +96,25 @@ function drawMidpointCircle(ctx, xc, yc, r, color) {
         plotSymmetricalPixels(x, y);
     }
 }
+/**
+ * Calcula los vértices de un polígono regular.
+ * @param {number} centerX, centerY - Centro
+ * @param {number} sides - Número de lados
+ * @param {number} radius - Radio
+ * @returns {Array} Arreglo de objetos {x, y}
+ */
 function getPolygonVertices(centerX, centerY, sides, radius) {
-    // Desarrollo del estudiante (Uso de Math.sin/Math.cos y retorno de datos)
+    const vertices = [];
+    for (let i = 0; i < sides; i++) {
+        // Cálculo del ángulo en radianes. Restamos Math.PI / 2 para que el polígono
+        // se dibuje "derecho" (el primer vértice apuntando a las 12 del reloj).
+        const angle = (i * 2 * Math.PI / sides) - (Math.PI / 2);
+        
+        // Transformación de coordenadas polares a coordenadas cartesianas (x, y)
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        
+        vertices.push({ x, y });
+    }
+    return vertices; // Retorna el arreglo de coordenadas exigido
 }

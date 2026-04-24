@@ -118,3 +118,39 @@ function getPolygonVertices(centerX, centerY, sides, radius) {
     }
     return vertices; // Retorna el arreglo de coordenadas exigido
 }
+/**
+ * IMPLEMENTACIÓN ADICIONAL: Lógica Principal.
+ * Sirve como punto de entrada (Entry Point). Se ejecuta automáticamente
+ * al terminar de cargar el documento HTML en el navegador.
+ */
+window.onload = function() {
+    const canvas = document.getElementById("miCanvas");
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext("2d");
+
+    // 1. Generar número aleatorio de lados n (entre 5 y 10)
+    const n = Math.floor(Math.random() * (10 - 5 + 1)) + 5;
+    console.log("Generando figura de " + n + " lados.");
+
+    // Configuración de medidas basadas en el tamaño del canvas
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const R = 150; // Radio del polígono (R)
+    const rCirculo = R / 4; // Radio de las circunferencias (R/4)
+
+    // 2. Obtener los vértices calculados trigonométricamente
+    const vertices = getPolygonVertices(centerX, centerY, n, R);
+
+    // 3. Unir los vértices trazando las líneas del polígono (Bresenham)
+    for (let i = 0; i < n; i++) {
+        const v1 = vertices[i];
+        const v2 = vertices[(i + 1) % n]; // El módulo (% n) permite conectar el último punto con el primero
+        bresenhamLine(v1.x, v1.y, v2.x, v2.y, "#0033aa");
+    }
+
+    // 4. Dibujar las circunferencias en cada esquina (Punto Medio)
+    for (let i = 0; i < n; i++) {
+        drawMidpointCircle(ctx, vertices[i].x, vertices[i].y, rCirculo, "#aa0033");
+    }
+};

@@ -52,6 +52,50 @@ function bresenhamLine(x0, y0, x1, y1, color) {
         }
     }
 }
+/**
+ * IMPLEMENTACIÓN ADICIONAL: Algoritmo de Punto Medio para circunferencias.
+ * Sirve para trazar círculos píxel a píxel sin usar funciones nativas como arc().
+ * Aprovecha la simetría de 8 vías para optimizar el rendimiento.
+ * @param {CanvasRenderingContext2D} ctx - Contexto del canvas
+ * @param {number} xc, yc - Coordenadas del centro de la circunferencia
+ * @param {number} r - Radio de la circunferencia
+ * @param {string} color - Color del trazo
+ */
+function drawMidpointCircle(ctx, xc, yc, r, color) {
+    xc = Math.floor(xc); yc = Math.floor(yc); r = Math.floor(r);
+    let x = 0;
+    let y = r;
+
+    // Parámetro de decisión p: 
+    // Determina matemáticamente si el siguiente píxel a pintar debe mantener 
+    // su coordenada Y o debe disminuir, basado en la ecuación del círculo.
+    let p = 1 - r;
+
+    // Función auxiliar para pintar 8 píxeles simultáneamente por simetría
+    const plotSymmetricalPixels = (x, y) => {
+        drawPixel(ctx, xc + x, yc + y, color);
+        drawPixel(ctx, xc - x, yc + y, color);
+        drawPixel(ctx, xc + x, yc - y, color);
+        drawPixel(ctx, xc - x, yc - y, color);
+        drawPixel(ctx, xc + y, yc + x, color);
+        drawPixel(ctx, xc - y, yc + x, color);
+        drawPixel(ctx, xc + y, yc - x, color);
+        drawPixel(ctx, xc - y, yc - x, color);
+    };
+
+    plotSymmetricalPixels(x, y);
+
+    while (x < y) {
+        x++;
+        if (p < 0) {
+            p += 2 * x + 1; // El punto ideal está dentro, mantenemos 'y'
+        } else {
+            y--;
+            p += 2 * (x - y) + 1; // El punto ideal está fuera, reducimos 'y'
+        }
+        plotSymmetricalPixels(x, y);
+    }
+}
 function getPolygonVertices(centerX, centerY, sides, radius) {
     // Desarrollo del estudiante (Uso de Math.sin/Math.cos y retorno de datos)
 }
